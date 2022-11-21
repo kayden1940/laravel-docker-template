@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  web:
+    container_name: "web"
+    build:
+      dockerfile: "./container/web/Dockerfile"
+    ports:
+      - "10090:80"
+    volumes:
+      - "./src:/var/www/html"
+
+  app:
+    container_name: "app"
+    build:
+      dockerfile: "./container/php/Dockerfile"
+    volumes:
+      - "./src:/var/www/html"
+
+  db:
+    container_name: "db"
+    build:
+      dockerfile: ./container/db/Dockerfile
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: qweqwe
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: user
+      MYSQL_PASSWORD: qweqwe
+    volumes:
+      - ./container/db/data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    platform: linux/amd64
+    container_name: phpmyadmin
+    depends_on:
+      - db
+    ports:
+      - 10099:80
