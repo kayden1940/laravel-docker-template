@@ -8,7 +8,7 @@ Laravel & Vue & JetStream（Inertia）環境構築用テンプレート
 
 ## 2. イメージ・コンテナの作成
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 nginxコンテナ : `localhost:10090`  
@@ -22,19 +22,16 @@ MySQLに「user」のアカウントが無い場合、`localhost:10099`に接続
 ## 3. 新規Laravelプロジェクトの作成 or 既存のLaravelプロジェクトのクローン
 ### 新規プロジェクトを構築する場合
 ```
-docker-compose exec app composer create-project --prefer-dist "laravel/laravel=" .
+docker compose exec app composer create-project --prefer-dist "laravel/laravel=" .
 ```
 ### 既存プロジェクトを利用する場合
 ```bash
-// src直下にcloneするため "." を忘れずに!
-cd src
-git clone <URL> .
-cd ..
+git clone <URL> src
 ```
 
 ## 5. パッケージインストール
 ```bash
-docker-compose exec app composer install
+docker compose exec app composer install
 ```
 ```bash
 npm --prefix src install src
@@ -42,10 +39,10 @@ npm --prefix src install src
 
 ## 6. Laravelの初期設定
 ```bash
-docker-compose exec app cp .env.example .env
-docker-compose exec app php artisan key:generate
-docker-compose exec app php artisan storage:link
-docker-compose exec app chmod -R 777 storage bootstrap/cache
+docker compose exec app cp .env.example .env
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan storage:link
+docker compose exec app chmod -R 777 storage bootstrap/cache
 ```
 
 ## 7. DB環境変数を修正
@@ -60,7 +57,7 @@ DB_PASSWORD=qweqwe
 
 ## 8. DB初期化 & マイグレーション
 ```bash
-docker-compose exec app php artisan migrate:fresh
+docker compose exec app php artisan migrate:fresh
 ```
 
 ## 開発用サーバー起動
@@ -69,33 +66,24 @@ cd src
 npm run dev
 ```
 
-# Usage
-
-実行方法など
-
-```bash
-git clone https://github.com/opipi406/~
-cd examples
-...
-```
 
 # Directories
 ```
 ├── Makefile
 ├── README.md
 ├── container
-│   ├── db  <-- MySQLコンテナ設定用のディレクトリ
+│   ├── db  <-- MySQLコンテナ設定用
 │   │   ├── Dockerfile
 │   │   ├── data
 │   │   └── my.conf
-│   ├── php <-- phpコンテナ設定用のディレクトリ
+│   ├── php <-- phpコンテナ設定用
 │   │   ├── Dockerfile
 │   │   └── php.ini
-│   └── web <-- nginxコンテナ設定用のディレクトリ
+│   └── web <-- nginxコンテナ設定用
 │       ├── Dockerfile
 │       └── default.conf
 │
-├── docker-compose.yml
+├── docker compose.yml
 └── src <-- Laravelのソースがここに入る
 ```
 
