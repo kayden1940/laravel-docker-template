@@ -1,7 +1,7 @@
 FROM php:fpm-buster
 # FROM php:7.4-fpm-buster
 
-COPY ./container/php/php.ini /usr/local/etc/php/php.ini
+COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
 
 WORKDIR /var/www/html
 

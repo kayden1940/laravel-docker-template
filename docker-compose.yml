@@ -4,7 +4,7 @@ services:
   web:
     container_name: "web"
     build:
-      dockerfile: "./container/web/Dockerfile"
+      dockerfile: "./docker/web/Dockerfile"
     ports:
       - "10090:80"
     volumes:
@@ -13,14 +13,14 @@ services:
   app:
     container_name: "app"
     build:
-      dockerfile: "./container/php/Dockerfile"
+      dockerfile: "./docker/php/Dockerfile"
     volumes:
       - "./src:/var/www/html"
 
   db:
     container_name: "db"
     build:
-      dockerfile: ./container/db/Dockerfile
+      dockerfile: ./docker/db/Dockerfile
     ports:
       - "3306:3306"
     environment:
@@ -29,11 +29,11 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: qweqwe
     volumes:
-      - ./container/db/data:/var/lib/mysql
+      - ./docker/db/data:/var/lib/mysql
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    platform: linux/amd64
+    # platform: linux/amd64
     container_name: phpmyadmin
     depends_on:
       - db
