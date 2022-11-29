@@ -1,5 +1,5 @@
 # Laravel & Vue & JetStream 環境構築用テンプレート（Docker環境）
-Laravel & Vue & JetStream（Inertia）環境構築用テンプレート
+Laravel & Vue & JetStream 環境構築用テンプレート
 
 # Installation
 ## 1. リポジトリの作成・クローン
@@ -10,16 +10,16 @@ Laravel & Vue & JetStream（Inertia）環境構築用テンプレート
 ```bash
 docker compose up -d
 ```
+|container|port|
+|-|-|
+|nginxコンテナ|localhost:10090|
+|phpMyAdminコンテナ|localhost:10099|
+|MailHog|localhost:8025|
 
-nginxコンテナ : `localhost:10090`  
-phpMyAdminコンテナ : `localhost:10099`  
-
-MySQLに「user」のアカウントが無い場合、`localhost:10099`に接続して以下のユーザーアカウントを作成  
-
-ユーザ名: user  
+ユーザ名: root  
 パスワード: qweqwe  
 
-## 3. 新規Laravelプロジェクトの作成 or 既存のLaravelプロジェクトのクローン
+## 3. Laravelプロジェクトの構築
 ### 新規プロジェクトを構築する場合
 ```
 docker compose exec app composer create-project --prefer-dist "laravel/laravel=" .
@@ -34,7 +34,7 @@ git clone <URL> src
 docker compose exec app composer install
 ```
 ```bash
-npm --prefix src install src
+docker compose exec app npm install
 ```
 
 ## 6. Laravelの初期設定
@@ -47,43 +47,52 @@ docker compose exec app chmod -R 777 storage bootstrap/cache
 
 ## 7. DB環境変数を修正
 ```bash
+# MySQL設定
 DB_CONNECTION=mysql
 DB_HOST=db
 DB_PORT=3306
 DB_DATABASE=laravel
-DB_USERNAME=user
+DB_USERNAME=root
 DB_PASSWORD=qweqwe
+
+# MailHogテスト用のメール設定
+MAIL_DRIVER=smtp
+MAIL_HOST=mail
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
 ```
 
 ## 8. DB初期化 & マイグレーション
 ```bash
 docker compose exec app php artisan migrate:fresh
 ```
+```bash
+docker compose exec app php artisan db:seed
+```
 
 ## 開発用サーバー起動
 ```bash
-cd src
-npm run dev
+docker compose exec app npm run dev
 ```
 
 
-# Directories
+# ディレクトリ構成
 ```
-├── Makefile
-├── README.md
-├── container
-│   ├── db  <-- MySQLコンテナ設定用
+├── docker
+│   ├── db  << MySQLコンテナ設定用
 │   │   ├── Dockerfile
 │   │   ├── data
 │   │   └── my.conf
-│   ├── php <-- phpコンテナ設定用
+│   ├── php << phpコンテナ設定用
 │   │   ├── Dockerfile
 │   │   └── php.ini
-│   └── web <-- nginxコンテナ設定用
+│   └── web << nginxコンテナ設定用
 │       ├── Dockerfile
 │       └── default.conf
 │
-├── docker compose.yml
-└── src <-- Laravelのソースがここに入る
+├── docker-compose.yml
+└── src << Laravelのソースがここに入る
 ```
 
