@@ -39,3 +39,14 @@ services:
       - db
     ports:
       - 10099:80
+
+  mail:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "8025:8025"
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /tmp
+    # volumes:
+    #   - ./maildir:/tmp
