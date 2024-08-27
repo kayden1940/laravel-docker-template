@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  web:
+    build:
+      dockerfile: "./web/Dockerfile"
+    ports:
+      - "8080:80"
+    volumes:
+      - "../src:/var/www/html"
+
+  app:
+    build:
+      dockerfile: "./php/Dockerfile"
+    volumes:
+      - "../src:/var/www/html"
+
+  db:
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - db-volume:/var/lib/mysql
+      - ./db/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 8089:80
+    environment:
+      PMA_USER: "${DB_USERNAME}"
+      PMA_PASSWORD: "${DB_PASSWORD}"
+      PMA_HOST: db
+    depends_on:
+      - db
+
+  mailpit:
+    image: "axllent/mailpit:latest"
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+    db-volume:
+        driver: local
