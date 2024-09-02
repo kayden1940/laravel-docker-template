@@ -6,14 +6,12 @@ services:
       dockerfile: "./web/Dockerfile"
     ports:
       - "8080:80"
-    volumes:
-      - "../src:/var/www/html"
 
   app:
     build:
       dockerfile: "./php/Dockerfile"
     volumes:
-      - "../src:/var/www/html"
+      - "../${COMPOSE_PROJECT_NAME}-impl:/var/www/html"
 
   db:
     image: 'mysql/mysql-server:8.0'
