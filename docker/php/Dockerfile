@@ -2,11 +2,12 @@ ARG PHP_IMAGE_VERSION=8.2-fpm
 # ARG COMPOSER_VERSION=2.5.5
 
 FROM php:${PHP_IMAGE_VERSION}
+EXPOSE 5173
 
 ENV COMPOSER_VERSION=2.5.5
 ENV NODE_VERSION=18.17.1
 
-COPY ./php/php.ini /usr/local/etc/php/php.ini
+COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
 
 WORKDIR /var/www/html
 
