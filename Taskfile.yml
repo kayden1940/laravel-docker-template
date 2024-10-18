@@ -1,0 +1,75 @@
+version: '3'
+
+tasks:
+  install:
+    desc: "Laravel initial installation"
+    cmds:
+      - docker compose exec app composer create-project --prefer-dist "laravel/laravel=" .
+      - docker compose exec app cp .env.example .env
+
+  init:
+    desc: "Initial setup"
+    cmds:
+      - docker compose exec app php artisan key:generate
+      - docker compose exec app php artisan storage:link
+      - docker compose exec app chmod -R 777 storage bootstrap/cache
+      - task: fresh
+
+  install-jetstream:
+    desc: "Install JetStream (Inertia)"
+    cmds:
+      - docker compose exec app composer require laravel/jetstream
+      - docker compose exec app php artisan jetstream:install inertia
+
+  up:
+    desc: "Start Docker containers"
+    cmds:
+      - docker compose up -d
+
+  build:
+    desc: "Build Docker containers"
+    cmds:
+      - docker compose build
+
+  destroy:
+    desc: "Stop Docker containers"
+    cmds:
+      - docker compose down --rmi all --volumes --remove-orphans
+
+  app:
+    desc: "Enter the app container"
+    cmds:
+      - docker compose exec app bash
+
+  sql:
+    desc: "Connect to SQL"
+    cmds:
+      - docker compose exec db bash -c 'mysql -u user -pqweqwe laravel'
+
+  clear:
+    desc: "Clear cache"
+    cmds:
+      - docker compose exec app php artisan cache:clear
+      - docker compose exec app php artisan config:clear
+      - docker compose exec app php artisan route:clear
+      - docker compose exec app php artisan view:clear
+
+  migrate:
+    desc: "Run migrations"
+    cmds:
+      - docker compose exec app php artisan migrate
+
+  fresh:
+    desc: "Migrate & refresh"
+    cmds:
+      - docker compose exec app php artisan migrate:fresh --seed
+
+  seed:
+    desc: "Seed the database"
+    cmds:
+      - docker compose exec app php artisan db:seed
+
+  tinker:
+    desc: "Start Tinker"
+    cmds:
+      - docker compose exec app php artisan tinker
