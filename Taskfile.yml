@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 tasks:
   install:
@@ -26,6 +26,11 @@ tasks:
     cmds:
       - docker compose up -d
 
+  down:
+    desc: "Start Docker containers"
+    cmds:
+      - docker compose down
+
   build:
     desc: "Build Docker containers"
     cmds:
@@ -40,6 +45,31 @@ tasks:
     desc: "Enter the app container"
     cmds:
       - docker compose exec app bash
+    
+  dev:
+    desc: "Run npm dev"
+    cmds:
+      - docker compose exec app npm run dev
+
+  exec:
+    desc: "Execute the app container"
+    cmds:
+      - docker compose exec app {{ .CLI_ARGS }}
+  
+  artisan:
+    desc: "Run artisan command"
+    cmds:
+      - docker compose exec app php artisan {{ .CLI_ARGS }}
+
+  test:
+    desc: "Run tests"
+    cmds:
+      - docker compose exec app php artisan test {{ .CLI_ARGS }}
+
+  test-ls:
+    desc: "List all tests"
+    cmds:
+      - docker compose exec app php artisan test --list-tests {{ .CLI_ARGS }}
 
   sql:
     desc: "Connect to SQL"
@@ -73,3 +103,8 @@ tasks:
     desc: "Start Tinker"
     cmds:
       - docker compose exec app php artisan tinker
+
+  generate-model:
+    desc: "Generate types"
+    cmds:
+      - docker compose exec app bash bin/generate-model.sh {{ .CLI_ARGS }}

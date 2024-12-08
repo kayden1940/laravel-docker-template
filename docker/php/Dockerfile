@@ -33,7 +33,8 @@ RUN docker-php-ext-install \
   zip \
   gd \
   iconv \
-  exif
+  exif \
+  bcmath
 
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 
