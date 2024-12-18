@@ -3,13 +3,13 @@ version: "3"
 services:
   web:
     build:
-      dockerfile: "./web/Dockerfile"
+      dockerfile: "./docker/web/Dockerfile"
     ports:
       - "8080:80"
 
   app:
     build:
-      dockerfile: "./php/Dockerfile"
+      dockerfile: "./docker/php/Dockerfile"
     volumes:
       - "../${COMPOSE_PROJECT_NAME}-impl:/var/www/html"
 
